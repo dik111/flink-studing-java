@@ -11,12 +11,12 @@ import org.apache.flink.types.Row;
 /**
  * Desription:
  *
- * @ClassName Example
+ * @ClassName TableTest1Example
  * @Author Zhanyuwei
  * @Date 2020/12/26 12:40
  * @Version 1.0
  **/
-public class Example {
+public class TableTest1Example {
 
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
