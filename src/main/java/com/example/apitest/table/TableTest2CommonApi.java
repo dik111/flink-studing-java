@@ -64,12 +64,28 @@ public class TableTest2CommonApi {
                 .withSchema( new Schema()
                         .field("id", DataTypes.STRING())
                 .field("timestamp",DataTypes.BIGINT())
-                .field("temp",DataTypes.DOUBLE()))
+                .field("temperature",DataTypes.DOUBLE()))
                 .createTemporaryTable("inputTable");
 
 
         Table inputTable = tableEnv.from("inputTable");
-        tableEnv.toAppendStream(inputTable, Row.class).print();
+        //tableEnv.toAppendStream(inputTable, Row.class).print();
+
+        // 查询转换
+        Table resultTable = inputTable.select("id,temperature")
+                .filter("id = 'sensor_6' ");
+
+        // 聚合统计
+        Table aggTable = inputTable.groupBy("id")
+                .select("id,id.count as count,temperature.avg as avgTemp");
+
+        // SQL
+        tableEnv.sqlQuery(" select id, temperature from inputTable where id = 'sensor_6' ");
+        Table sqlAggTable = tableEnv.sqlQuery("select id,count(id) as cnt,avg(temperature) as avgTemp from inputTable group by id");
+
+        // 打印输出
+        tableEnv.toAppendStream(resultTable,Row.class).print("result");
+        tableEnv.toRetractStream(sqlAggTable,Row.class).print("sqlAggTable");
         env.execute();
 
     }
